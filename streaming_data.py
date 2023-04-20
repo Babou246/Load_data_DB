@@ -1,0 +1,44 @@
+"""
+Streaming data consumer
+"""
+from datetime import datetime
+from kafka import KafkaConsumer
+import mysql.connector
+
+TOPIC='babacar'
+DATABASE = 'streaming_data'
+USERNAME = 'root'
+PASSWORD = 'passer'
+
+print("Connecting to the database")
+try:
+    connection = mysql.connector.connect(host='localhost', database=DATABASE, user=USERNAME, password=PASSWORD)
+except Exception:
+    print("Could not connect to database. Please check credentials")
+else:
+    print("Connected to database")
+cursor = connection.cursor()
+
+print("Connecting to Kafka")
+consumer = KafkaConsumer(TOPIC)
+print("Connected to Kafka")
+print(f"Reading messages from the topic {TOPIC}")
+for msg in consumer:
+
+    # Extract information from kafka
+
+    message = msg.value.decode("utf-8")
+
+    # Transform the date format to suit the database schema
+    (timestamp, benefice,pays, prix_unitaire, produit,quantite_en_tonne) = message.split(",")
+
+    dateobj = datetime.strptime(timestamp, '%a %b %d %H:%M:%S %Y')
+    timestamp = dateobj.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Loading data into the database table
+
+    sql = "insert into data values(%s,%s,%s,%s,%s,%s)"
+    result = cursor.execute(sql, (timestamp, benefice,pays, prix_unitaire, produit,quantite_en_tonne))
+    print(f"A {produit} was inserted into the database")
+    connection.commit()
+connection.close()

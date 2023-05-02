@@ -3,6 +3,8 @@
 ## Créer un environnement de developpement
 python3 -m venv kafka-env
 
+## Configurer mysql et créer une table selon votre consomer 
+
 ## Streaming Data avec Kafka
 ## Si vous êtes sur windows
 cd kafka-[version]\bin\windows
@@ -12,4 +14,6 @@ zookeeper-server-start.bat ..\..\config\zookeeeper.properties
 kafka-server-start.bat ..\..\config\servers.properties
 ## Ouvrir pour chaque script une fenetre pour producer ainsi que pour le consomer
 python3 prod.py
+
 python3 streaming.py
+

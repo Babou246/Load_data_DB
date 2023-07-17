@@ -8,7 +8,7 @@ import mysql.connector
 TOPIC='babacar'
 DATABASE = 'streaming_data'
 USERNAME = 'root'
-PASSWORD = 'passer'
+PASSWORD = ''
 
 print("Connecting to the database")
 try:
